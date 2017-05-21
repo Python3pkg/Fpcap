@@ -27,7 +27,7 @@ if __name__ == '__main__':
 	(options, args) = parser.parse_args()
 
 	# 至少需要1个号码
-	num_list = filter(lambda x: x != '', [eval('options.num%d' % x) for x in range(1, max_num + 1)])
+	num_list = [x for x in [eval('options.num%d' % x) for x in range(1, max_num + 1)] if x != '']
 	if not num_list:
 		print("no any numbers will be monitored")
 		os.sys.exit(0)
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 	try:
 		with capturePcap(options.host, options.port, options.password, debug=False) as p:
 			p.set_pcap(eth=options.eth).set_monitor_numbers(num_list)
-			print("number monitored list:%s" % num_list)
+			print(("number monitored list:%s" % num_list))
 			p.run(36000)
 	except Exception as err:
 		print(err)

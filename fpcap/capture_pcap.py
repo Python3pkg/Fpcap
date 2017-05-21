@@ -103,11 +103,11 @@ class capturePcap(ESLEvent):
 		  无
 		"""
 		ESLEvent.disconnect(self)
-		for uuid, call in self.__call.items():
+		for uuid, call in list(self.__call.items()):
 			pcap = call.get("pcap", None)
 			if pcap:
 				pcap.terminate()
-				print("%s tcpdump end %s" % (call.get("id", "0"), call.get("pcap_name", "")))
+				print(("%s tcpdump end %s" % (call.get("id", "0"), call.get("pcap_name", ""))))
 		else:
 			if self.__debug:
 				print("\n[end] all\n")
@@ -185,8 +185,8 @@ class capturePcap(ESLEvent):
 					"id": session_id
 					}
 				if self.__debug:
-					print("\n%s [begin]" % (session_id))
-				print("%s locked the number. caller:%s callee:%s" % (session_id, caller_num, callee_num))
+					print(("\n%s [begin]" % (session_id)))
+				print(("%s locked the number. caller:%s callee:%s" % (session_id, caller_num, callee_num)))
 
 		# outbound侧的呼叫
 		elif call_dir in ['outbound']:
@@ -211,7 +211,7 @@ class capturePcap(ESLEvent):
 					info_other["uuid_other"] = uuid
 
 				if self.__debug:
-					print("%s associated the number. caller:%s callee:%s" % (self.__call[uuid]["id"], caller_num, callee_num))
+					print(("%s associated the number. caller:%s callee:%s" % (self.__call[uuid]["id"], caller_num, callee_num)))
 
 	def __channel_answer(self, event):
 		"""
@@ -251,12 +251,12 @@ class capturePcap(ESLEvent):
 		# 这里会创建子进程
 		pcap = tcpdump(self.__protocol, self.__eth, os.path.join(self.__path, pcap_name), int(local_media_port), debug=self.__debug)
 		if pcap.run():
-			print("%s tcpdump begin %s on %s port(src&dst) %s" % (call.get("id", "0"), pcap_name, self.__eth, local_media_port))
+			print(("%s tcpdump begin %s on %s port(src&dst) %s" % (call.get("id", "0"), pcap_name, self.__eth, local_media_port)))
 			call["pcap"] = pcap
 			call["pcap_name"] = pcap_name
 		else:
 			if self.__debug:
-				print("%s tcpdump failed %s on %s port(src&dst) %s" % (call.get("id", "0"), pcap_name, self.__eth, local_media_port))
+				print(("%s tcpdump failed %s on %s port(src&dst) %s" % (call.get("id", "0"), pcap_name, self.__eth, local_media_port)))
 			pass
 
 	def __channel_hangup(self, event):
@@ -280,10 +280,10 @@ class capturePcap(ESLEvent):
 		pcap = call.get("pcap", None)
 		if pcap:
 			pcap.terminate()
-			print("%s tcpdump end %s" % (call.get("id", "0"), call.get("pcap_name", "")))
+			print(("%s tcpdump end %s" % (call.get("id", "0"), call.get("pcap_name", ""))))
 			
 		
 		if self.__debug and not self.__call.get(call.get("uuid_other", ""), {}):
-			print("%s [end]\n" % (call.get("id", "0")))
+			print(("%s [end]\n" % (call.get("id", "0"))))
 
 		del self.__call[uuid]

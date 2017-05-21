@@ -3,4 +3,4 @@
 
 __version__ = "1.2"
 
-from capture_pcap import capturePcap
+from .capture_pcap import capturePcap
